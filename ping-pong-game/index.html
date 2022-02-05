@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8" />
+   <title>ping pong</title>
+   <style>
+      * {
+         padding: 0;
+         margin: 0;
+      }
+
+      canvas {
+         background: #eee;
+         display: block;
+         margin: 0 auto;
+      }
+   </style>
+</head>
+
+<body>
+
+   <body bgcolor="black">
+      <font face="Verdana, Arial, Helvetica, sans-serif" color="white" size=80>
+         <center>simple ping pong by filippo renai </center>
+      </font>
+      <br>
+      <canvas id="myCanvas" width="400" height="500"></canvas>
+
+      <script>
+         var canvas = document.getElementById("myCanvas");
+         var ctx = canvas.getContext("2d");
+
+         var scoreR = 0; 
+         var scoreB = 0;
+         var startGame = false;
+         var ballRadius = 10;
+         var x = canvas.width / 2 ;
+         var y = canvas.height / 2 - ballRadius;
+         var dx = 3;
+         var dy = -2;
+         var paddleHeight = 10;
+         var paddleWidth = 75;
+         var paddleX = (canvas.width - paddleWidth) / 2;
+         var rightPressed = false;
+         var leftPressed = false;
+         var newpaddleX = (canvas.width - paddleWidth) / 2;
+         var newrightPressed = false;
+         var newleftPressed = false;
+
+         document.addEventListener("keydown", keyDownHandler, false);
+         document.addEventListener("keyup", keyUpHandler, false);
+
+         function keyDownHandler(e) {
+            if (e.key == "Right" || e.key == "ArrowRight") {
+               rightPressed = true;
+            }
+            else if (e.key == "Left" || e.key == "ArrowLeft") {
+               leftPressed = true;
+            }
+            else if(e.key == "Enter"){
+               startGame = true;
+            }
+            else if(e.key == "d"){
+               newrightPressed = true;
+            }
+            else if(e.key == "a"){
+               newleftPressed = true;
+            }
+         }
+
+         function keyUpHandler(e) {
+            if (e.key == "Right" || e.key == "ArrowRight") {
+               rightPressed = false;
+            }
+            else if (e.key == "Left" || e.key == "ArrowLeft") {
+               leftPressed = false;
+            }
+            else if (e.key == "d" || e.key == "ArrowLeft") {
+               newrightPressed = false;
+            }
+            else if (e.key == "a"){
+               newleftPressed = false;
+            }
+         }
+
+         function instructions(){
+            ctx.font = "20px Arial";
+            ctx.fillStyle = "#000000";
+            ctx.fillText("ENTER --> START", 8, canvas.height/2 -20 );
+            ctx.fillText("RED --> A/D", 8, canvas.height/2 );
+            ctx.fillText("BLUE --> ◄/►", 8, canvas.height/2 + 20);
+
+         }
+         function drawScoreR() {
+            ctx.font = "18px Arial";
+            ctx.fillStyle = "#FF0000";
+            ctx.fillText(scoreR, 8, 20);
+         }
+         function drawScoreB() {
+            ctx.font = "18px Arial";
+            ctx.fillStyle = "#0095DD";
+            ctx.fillText( scoreB, 8, canvas.height-10);
+         }
+         function drawBall() {
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#000000";
+            ctx.fill();
+            ctx.closePath();
+         }
+         function drawPaddle() {
+            ctx.beginPath();
+            ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+         }
+         function newdrawPaddle() {
+            ctx.beginPath();
+            ctx.rect(newpaddleX, 0, paddleWidth, paddleHeight);
+            ctx.fillStyle = "#FF0000";
+            ctx.fill();
+            ctx.closePath();
+         }
+
+         function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(!startGame) instructions();
+            drawScoreR();
+            drawScoreB();
+            drawBall();
+            drawPaddle();
+            newdrawPaddle();
+
+            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+               dx = -dx;
+            }
+            if (y + dy < ballRadius+paddleHeight) {
+               if (x > newpaddleX && x < newpaddleX + paddleWidth) {
+                  dy = -dy;
+               }
+               else{
+                  x = canvas.width / 2 ;
+                  y = canvas.height / 2 - ballRadius;
+                  paddleX = (canvas.width - paddleWidth) / 2;
+                  newpaddleX = (canvas.width - paddleWidth) / 2;
+                  startGame = false;
+                  scoreB++;
+               }
+            }
+            else if (y + dy > canvas.height - ballRadius-paddleHeight) {
+               if (x > paddleX && x < paddleX + paddleWidth) {
+                  dy = -dy;
+               }
+               else {
+                  x = canvas.width / 2 ;
+                  y = canvas.height / 2 - ballRadius;
+                  paddleX = (canvas.width - paddleWidth) / 2;
+                  newpaddleX = (canvas.width - paddleWidth) / 2;
+                  startGame = false;
+                  scoreR++;
+               }
+            }
+
+            if (rightPressed && paddleX < canvas.width - paddleWidth) {
+               paddleX += 7;
+            }
+            else if (leftPressed && paddleX > 0) {
+               paddleX -= 7;
+            }
+
+            if (newrightPressed && newpaddleX < canvas.width - paddleWidth) {
+               newpaddleX += 7;
+            }
+            else if (newleftPressed && newpaddleX > 0) {
+               newpaddleX -= 7;
+            }
+
+            if(startGame){
+               x += dx;
+               y += dy;
+            }
+         }
+
+         setInterval(draw, 10);
+      </script>
+
+   </body>
+
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8" />
+   <title>tic toc toe</title>
+   <style>
+      * {
+         padding: 0;
+         margin: 0;
+      }
+
+      #scoreX {
+         text-align: left;
+         font-size: 40px;
+         font-family: 'Antic Slab', serif;
+         color: white;
+      }
+
+      #scoreO {
+         text-align: left;
+         font-size: 40px;
+         font-family: 'Antic Slab', serif;
+         color: white;
+      }
+
+      #turno {
+         text-align: center;
+         font-size: 40px;
+         font-family: 'Antic Slab', serif;
+         color: white;
+      }
+
+      canvas {
+         background: lightgrey;
+         display: block;
+         margin: 0 auto;
+      }
+   </style>
+</head>
+
+<body>
+
+   <body bgcolor="darkred">
+      <font face="Verdana, Arial, Helvetica, sans-serif" color="white" size=80>
+         <center>Tic toc toe by Filippo Renai</center>
+      </font>
+      <div id="turno"> turno: X</div>
+      <div id="scoreX"> X: 0</div>
+      <div id="scoreO"> O: 0</div>
+      <canvas id="myCanvas" width="450" height="450"></canvas>
+
+
+      <script>
+         //programma di filippo renai
+         var canvas = document.getElementById("myCanvas");
+         var ctx = canvas.getContext("2d");
+
+         var x = new Image(); x.src = "immagini/o.png";
+         var o = new Image(); o.src = "immagini/x.png";
+         var img0 = new Image(); img0.src = "immagini/img0.png";
+         var img1 = new Image(); img1.src = "immagini/img1.png";
+         var img2 = new Image(); img2.src = "immagini/img2.png";
+         var img3 = new Image(); img3.src = "immagini/img3.png";
+         var img4 = new Image(); img4.src = "immagini/img4.png";
+         var img5 = new Image(); img5.src = "immagini/img5.png";
+         var img6 = new Image(); img6.src = "immagini/img6.png";
+         var img7 = new Image(); img7.src = "immagini/img7.png";
+         var img8 = new Image(); img8.src = "immagini/img8.png";
+
+         var turno = 0; 
+         var keyPressed = -1;
+         var neverCreated = true;
+         var vitt = -1;
+         var m = [];
+         var mouseX;
+         var mouseY;
+         var scoreO = 0;
+         var scoreX = 0;
+         var pareggio = 9;
+
+         function matrix() {
+            neverCreated = false;
+            m = new Array(3);
+            for (var i = 0; i < 3; i++)
+               m[i] = new Array(3);
+
+            //lo popolo
+            for (var i = 0; i < 3; i++) {
+               for (var j = 0; j < 3; j++) {
+                  m[i][j] = -1;
+               }
+            }
+         }
+
+         function disCamp() {
+            //orizzonale  
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(450, 150);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 300);
+            ctx.lineTo(450, 300);
+            ctx.stroke();
+
+            //verticale
+            ctx.beginPath();
+            ctx.moveTo(150, 0);
+            ctx.lineTo(150, 450);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(300, 0);
+            ctx.lineTo(300, 450);
+            ctx.stroke();
+
+         }
+
+         function disPic() {
+
+            //0
+            if (m[0][0] == -1) ctx.drawImage(img0, 0, 0);
+            if (m[0][0] == 0) ctx.drawImage(o, 0, 0);
+            if (m[0][0] == 1) ctx.drawImage(x, 0, 0);
+            //1
+            if (m[0][1] == -1) ctx.drawImage(img1, 150, 0);
+            if (m[0][1] == 0) ctx.drawImage(o, 150, 0);
+            if (m[0][1] == 1) ctx.drawImage(x, 150, 0);
+            //2 
+            if (m[0][2] == -1) ctx.drawImage(img2, 300, 0);
+            if (m[0][2] == 0) ctx.drawImage(o, 300, 0);
+            if (m[0][2] == 1) ctx.drawImage(x, 300, 0);
+            //3
+            if (m[1][0] == -1) ctx.drawImage(img3, 0, 150);
+            if (m[1][0] == 0) ctx.drawImage(o, 0, 150);
+            if (m[1][0] == 1) ctx.drawImage(x, 0, 150);
+            //4
+            if (m[1][1] == -1) ctx.drawImage(img4, 150, 150);
+            if (m[1][1] == 0) ctx.drawImage(o, 150, 150);
+            if (m[1][1] == 1) ctx.drawImage(x, 150, 150);
+            //5 
+            if (m[1][2] == -1) ctx.drawImage(img5, 300, 150);
+            if (m[1][2] == 0) ctx.drawImage(o, 300, 150);
+            if (m[1][2] == 1) ctx.drawImage(x, 300, 150);
+            //6
+            if (m[2][0] == -1) ctx.drawImage(img6, 0, 300);
+            if (m[2][0] == 0) ctx.drawImage(o, 0, 300);
+            if (m[2][0] == 1) ctx.drawImage(x, 0, 300);
+            //7
+            if (m[2][1] == -1) ctx.drawImage(img7, 150, 300);
+            if (m[2][1] == 0) ctx.drawImage(o, 150, 300);
+            if (m[2][1] == 1) ctx.drawImage(x, 150, 300);
+            //8 
+            if (m[2][2] == -1) ctx.drawImage(img8, 300, 300);
+            if (m[2][2] == 0) ctx.drawImage(o, 300, 300);
+            if (m[2][2] == 1) ctx.drawImage(x, 300, 300);
+         }
+
+         function click() {
+            //0
+            if (keyPressed == 0 && turno == 0 && m[0][0] == -1) {
+               m[0][0] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else if (keyPressed == 0 && turno == 1 && m[0][0] == -1) {
+               m[0][0] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+            }
+            //1
+            else if (keyPressed == 1 && turno == 0 && m[0][1] == -1) {
+               m[0][1] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+
+            }
+            else if (keyPressed == 1 && turno == 1 && m[0][1] == -1) {
+               m[0][1] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+            }
+            //2
+            else if (keyPressed == 2 && turno == 0 && m[0][2] == -1) {
+               m[0][2] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+            }
+            else if (keyPressed == 2 && turno == 1 && m[0][2] == -1) {
+               m[0][2] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+            }
+            //3
+            else if (keyPressed == 3 && turno == 0 && m[1][0] == -1) {
+               m[1][0] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+            }
+            else if (keyPressed == 3 && turno == 1 && m[1][0] == -1) {
+               m[1][0] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+
+            }
+            //4
+            else if (keyPressed == 4 && turno == 0 && m[1][1] == -1) {
+               m[1][1] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else if (keyPressed == 4 && turno == 1 && m[1][1] == -1) {
+               m[1][1] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            //5
+            else if (keyPressed == 5 && turno == 0 && m[1][2] == -1) {
+               m[1][2] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else if (keyPressed == 5 && turno == 1 && m[1][2] == -1) {
+               m[1][2] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            //6
+            else if (keyPressed == 6 && turno == 0 && m[2][0] == -1) {
+               m[2][0] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else if (keyPressed == 6 && turno == 1 && m[2][0] == -1) {
+               m[2][0] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            //7
+            else if (keyPressed == 7 && turno == 0 && m[2][1] == -1) {
+               m[2][1] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else if (keyPressed == 7 && turno == 1 && m[2][1] == -1) {
+               m[2][1] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            //8
+            else if (keyPressed == 8 && turno == 0 && m[2][2] == -1) {
+               m[2][2] = 0;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else if (keyPressed == 8 && turno == 1 && m[2][2] == -1) {
+               m[2][2] = 1;
+               if (turno == 0) turno = 1;
+               else turno = 0;
+               keyPressed = -1;
+               pareggio = pareggio -1;
+            }
+            else { keyPressed = -1; }
+
+         }
+
+         function vittoria() {
+            //righe
+            if (m[0][0] == 0 && m[0][1] == 0 && m[0][2] == 0) vitt = 0;
+            if (m[1][0] == 0 && m[1][1] == 0 && m[1][2] == 0) vitt = 0;
+            if (m[2][0] == 0 && m[2][1] == 0 && m[2][2] == 0) vitt = 0;
+
+            if (m[0][0] == 1 && m[0][1] == 1 && m[0][2] == 1) vitt = 1;
+            if (m[1][0] == 1 && m[1][1] == 1 && m[1][2] == 1) vitt = 1;
+            if (m[2][0] == 1 && m[2][1] == 1 && m[2][2] == 1) vitt = 1;
+
+            //colonne
+            if (m[0][0] == 0 && m[1][0] == 0 && m[2][0] == 0) vitt = 0;
+            if (m[0][1] == 0 && m[1][1] == 0 && m[2][1] == 0) vitt = 0;
+            if (m[0][2] == 0 && m[1][2] == 0 && m[2][2] == 0) vitt = 0;
+
+            if (m[0][0] == 1 && m[1][0] == 1 && m[2][0] == 1) vitt = 1;
+            if (m[0][1] == 1 && m[1][1] == 1 && m[2][1] == 1) vitt = 1;
+            if (m[0][2] == 1 && m[1][2] == 1 && m[2][2] == 1) vitt = 1;
+
+            //croci
+            if (m[0][0] == 0 && m[1][1] == 0 && m[2][2] == 0) vitt = 0;
+            if (m[0][2] == 0 && m[1][1] == 0 && m[2][0] == 0) vitt = 0;
+
+            if (m[0][0] == 1 && m[1][1] == 1 && m[2][2] == 1) vitt = 1;
+            if (m[0][2] == 1 && m[1][1] == 1 && m[2][0] == 1) vitt = 1;
+
+         }
+
+         function reset() {
+            for (var i = 0; i < 3; i++) {
+               for (var j = 0; j < 3; j++) {
+                  m[i][j] = -1;
+               }
+            }
+            vitt = -1;
+            pareggio = 9;
+         }
+
+
+
+         function draw() {
+            //ripulire lo schermo
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(turno==0) document.getElementById('turno').innerHTML = "turno:X";
+            else document.getElementById('turno').innerHTML = "turno:O";
+            if (neverCreated) matrix();
+            disCamp();
+            click();
+            disPic();
+            vittoria();
+            if (vitt == 1) {
+               scoreO = scoreO + 1;
+               document.getElementById('scoreO').innerHTML = "O: " + scoreO;
+               reset();
+               turno = 0;
+            }
+            if (vitt == 0) {
+               scoreX = scoreX + 1;
+               document.getElementById('scoreX').innerHTML = "X: " + scoreX;
+               reset();
+               turno = 1;
+            }
+            if(pareggio == 0 && vitt==-1){
+               reset();
+               if (turno == 0) turno = 1;
+               else turno = 0;
+            }
+         }
+         setInterval(draw, 10);
+         //eventi
+         document.addEventListener("keydown", keyDownHandler, false);
+         //controlli dell'azioni
+         function keyDownHandler(e) { //tasto premuto
+            switch (e.key) {
+               case "0":
+                  if (keyPressed == -1) keyPressed = 0;
+                  break;
+               case "1":
+                  if (keyPressed == -1) keyPressed = 1;
+                  break;
+               case "2":
+                  if (keyPressed == -1) keyPressed = 2;
+                  break;
+               case "3":
+                  if (keyPressed == -1) keyPressed = 3;
+                  break;
+               case "4":
+                  if (keyPressed == -1) keyPressed = 4;
+                  break;
+               case "5":
+                  if (keyPressed == -1) keyPressed = 5;
+                  break;
+               case "6":
+                  if (keyPressed == -1) keyPressed = 6;
+                  break;
+               case "7":
+                  if (keyPressed == -1) keyPressed = 7;
+                  break;
+               case "8":
+                  if (keyPressed == -1) keyPressed = 8;
+                  break;
+            }
+         }
+
+      </script>
+
+   </body>
+
+</html>

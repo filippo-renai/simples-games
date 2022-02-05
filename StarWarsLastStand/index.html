@@ -1,0 +1,37 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>LAST STAND</title>
+    <link rel="icon" type="image/gif/png" href="images/titleImg.png">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background: url("images/sfondo.png");
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body bgcolor="darkred">
+    <audio id="game" src="sounds/game.mp3" preload="auto" ></audio>
+    <audio id="menu" src="sounds/menu.mp3" preload="auto" loop></audio>
+    <audio id="fuoco" src="sounds/fuoco.mp3" preload="auto"></audio>
+    <audio id="sottovoci" src="sounds/sottovoci.mp3" preload="auto"></audio>
+    <br>
+    <canvas id="myCanvas" width="1350" height="620"></canvas>
+    <script type="text/javascript" src="suoni.js"></script>
+    <script type="text/javascript" src="controlli.js"></script>
+    <script type="text/javascript" src="nongioco.js"></script>
+    <script type="text/javascript" src="gioco.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+
+
+</body>
+
+</html>

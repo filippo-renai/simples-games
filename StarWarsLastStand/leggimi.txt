@@ -1,0 +1,6 @@
+Per avviare il gioco basta aprire il file index possibilmente con chrome,
+piccolo gioco creato per esercitarsi con javascript.
+
+Lo scopo del gioco è arrivare in fondo oltrepassando i nemici.
+
+Programmato e ideato da Filippo Renai.

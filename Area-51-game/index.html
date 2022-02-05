@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8" />
+   <title>desert</title>
+   <style>
+      * {
+         padding: 0;
+         margin: 0;
+      }
+
+      canvas {
+         background: url("immagine.jpg");
+         display: block;
+         margin: 0 auto;
+      }
+
+      #score {
+         text-align: center;
+         font-size: 60px;
+         font-family: 'Antic Slab', serif;
+         color: white;
+      }
+
+      #bestscore {
+         text-align: right;
+         font-size: 40px;
+         font-family: 'Antic Slab', serif;
+         color: white;
+      }
+   </style>
+</head>
+
+<body>
+
+   <body bgcolor="black">
+      <font face="Verdana, Arial, Helvetica, sans-serif" color="white" size=100>
+         <center>Area 51 by filippo renai </center>
+      </font>
+      <font face="Courier New, Courier, mono" color="white" size=80>
+            WASD per spostarti,Enter per iniziare il gioco.
+            P per stoppare e riattivare, evita la sfera!
+      </font>
+      <div id="score"> Score: 0</div>
+      <div id="bestscore">Best Score: 0</div>
+
+      <canvas id="myCanvas" width="626" height="305"></canvas>
+
+      <script>
+         var c = document.getElementById("myCanvas");
+         var ctx = c.getContext("2d");
+         var score = 0;
+         var bestscore = 0;
+         //alieno
+         var img = new Image();
+         img.src = "alien.png";
+         var x = (c.width / 2) - 25;
+         var y = (c.height / 2) - 25;
+         var speedAlien = 7;
+         //palla
+         var xBall = 10;
+         var yBall = 10;
+         var ballRadius = 10;
+         var speedBallX = 9;
+         var speedBallY = 8;
+         //controllo
+         var startGame = false;
+         var rightPressed = false;
+         var leftPressed = false;
+         var upPressed = false;
+         var downPressed = false;
+         var pauseGame = false;
+
+
+         function drawAlien() {
+            ctx.drawImage(img, x, y);
+         }
+         function drawBall() {
+            ctx.beginPath();
+            ctx.arc(xBall, yBall, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#000000";
+            ctx.fill();
+            ctx.closePath();
+         }
+
+         function gameOver(xB, yB) {
+            if (xB > x && xB < x + img.width && yB > y && yB < y + img.height) return true;
+            else return false;
+         }
+
+         function game() {
+            ctx.clearRect(0, 0, c.width, c.height);
+            drawAlien();
+            drawBall();
+             
+            //gameOver 
+            if (gameOver(xBall, yBall)) {
+               startGame = false;
+               if (score > bestscore) {
+                  bestscore = score;
+                  document.getElementById('bestscore').innerHTML = "BestScore: " + bestscore;
+               }
+               score = 0;
+               document.getElementById('score').innerHTML = "Score: " + score;
+               x = (c.width / 2) - 25;
+               y = (c.height / 2) - 25;
+               xBall = 10;
+               yBall = 10;
+            }
+
+            //gioco attivo
+            if (startGame && !pauseGame) {
+               document.getElementById('score').innerHTML = "Score: " + score;
+               //palla controllo parete
+               if (xBall + speedBallX > c.width - ballRadius || xBall + speedBallX < ballRadius) {
+                  speedBallX = -speedBallX;
+               }
+               if (yBall + speedBallY > c.height - ballRadius || yBall + speedBallY < ballRadius) {
+                  speedBallY = -speedBallY;
+               }
+               //alieno movimento
+               if (startGame && rightPressed && x < c.width - img.width) {
+                  x += speedAlien;
+               }
+               else if (startGame && leftPressed && x > 0) {
+                  x -= speedAlien;
+               }
+               if (startGame && downPressed && y < c.height - img.height) {
+                  y += speedAlien;
+               }
+               else if (startGame && upPressed && y > 0) {
+                  y -= speedAlien;
+               }
+               xBall += speedBallX;
+               yBall += speedBallY;
+               score++;
+            }
+
+
+         }
+
+         function keyDownHandler(e) {
+            switch (e.key) {
+               case "a":
+                  leftPressed = true;
+                  break;
+               case "d":
+                  rightPressed = true;
+                  break;
+               case "w":
+                  upPressed = true;
+                  break;
+               case "s":
+                  downPressed = true;
+                  break;
+               case "Enter":
+                  startGame = true;
+                  pauseGame = false;
+                  break;
+               case "p":
+                  if (pauseGame) pauseGame = false;
+                  else pauseGame = true;
+                  break;
+            }
+         }
+
+         function keyUpHandler(e) {
+            switch (e.key) {
+               case "a":
+                  leftPressed = false;
+                  break;
+               case "d":
+                  rightPressed = false;
+                  break;
+               case "w":
+                  upPressed = false;
+                  break;
+               case "s":
+                  downPressed = false;
+                  break;
+            }
+         }
+
+         document.addEventListener("keydown", keyDownHandler, false);
+         document.addEventListener("keyup", keyUpHandler, false);
+         setInterval(game, 10);
+
+      </script>
+
+   </body>
+
+</html>
